@@ -9,8 +9,8 @@ namespace Task1
         private const double Eps = 1E-6;
 
         public Polynomial(params double[] coeff) {
-            Degree = coeff.Length - 1;
             Coefficients = coeff;
+            Degree = GetDegree(coeff);
         }
 
 
@@ -47,7 +47,7 @@ namespace Task1
             return Multiply(number,p);
         }
         public static Polynomial operator *(Polynomial p, int number) {
-            return number*p;
+            return Multiply(number,p);
         }
         public static Polynomial operator /(Polynomial p, int number) {
             return Devide(p, number);
@@ -68,8 +68,7 @@ namespace Task1
             }
         }
 
-        public static Polynomial Add(Polynomial p1, Polynomial p2)
-        {
+        public static Polynomial Add(Polynomial p1, Polynomial p2){
             if (p1.Degree == 0) return Add(p2, p1[0]);
             if (p2.Degree == 0) return Add(p1, p2[0]);
             int minDegree;
@@ -133,39 +132,38 @@ namespace Task1
             return Multiply(1/number,p);
         }
 
+        private int GetDegree(double[] coeff){
+            int degree = coeff.Length - 1;
+            int countZero = 0;
+            for (int i = degree; i > 0; i--){
+                if (Math.Abs(coeff[i]) < Eps)
+                    countZero++;
+                else break;
+            }
+            return degree - countZero;
+        }
+
         public override string ToString() {
             var result = new StringBuilder();
             for (int i = Degree; i >= 0; i--) {
                 if(Math.Abs(this[i]) < Eps) continue;
-                string sign;
+                string sign = "";
+                if (this[i] > 0 && i != Degree)
+                    sign = "+";
                 if (i == 1) {
-                    if(Math.Abs(this[i]) > Eps) {
-                        sign = this[i] < 0 ? "" : "+";
-                        if(Math.Abs((int) (this[1] - 1)) < double.Epsilon) {
-                            result.Append(sign + "x");
-                        } else
-                            result.Append(sign + this[1] + "x");
-                    }
+                    if (Math.Abs((int) (this[1] - 1)) < Eps)
+                        result.Append(sign + "x");
+                    else
+                        result.Append(sign + this[1] + "x");
                     continue;
                 }
                 if (i == 0) {
-                    if(Math.Abs(this[i]) > Eps) {
-                        sign = this[i] < 0 ? "" : "+";
-                        result.Append(sign + this[0]);
-                    }
+                    result.Append(sign + this[i]);
                     continue;
                 }
-
-                if (Math.Abs((int) (this[i] - 1)) < Eps || Math.Abs((int) (this[i] - (-1))) < Eps) {
-                    sign = this[i] < 0 ? "" : "+";
-                    result.Append(sign + "x^" + i);
-                    continue;
-                }
-                sign = this[i] < 0 ? "" : "+";
                 result.Append(sign + this[i] + "x^" + i);
-             }
-           
-            return result.ToString();
+            }
+           return result.ToString();
         }
 
         public override bool Equals(object obj) {
