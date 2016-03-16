@@ -6,11 +6,13 @@ namespace Task1
     public sealed class Polynomial {
         public readonly double[] Coefficients;
         public readonly int Degree;
+        private const double Eps = 1E-6;
 
         public Polynomial(params double[] coeff) {
             Degree = coeff.Length - 1;
             Coefficients = coeff;
         }
+
 
         public static Polynomial operator +(Polynomial p1, Polynomial p2) {
             return Add(p1, p2);
@@ -101,8 +103,8 @@ namespace Task1
         }
         public static Polynomial Negate(Polynomial p) {
             int resultDegree = p.Degree;
-            double[] resultCoeff = new double[resultDegree];
-            for (int i = 0; i < resultDegree; i++) {
+            double[] resultCoeff = new double[resultDegree + 1];
+            for (int i = 0; i <= resultDegree; i++) {
                 resultCoeff[i] = -p[i];
             }
             return new Polynomial(resultCoeff);
@@ -117,7 +119,7 @@ namespace Task1
 
         public static Polynomial Multiply(Polynomial p1, Polynomial p2) {
             if (p1.Degree == 0) return Multiply(p1[0], p2);
-            if (p2.Degree == 0) return Multiply(p2[0], p2);
+            if (p2.Degree == 0) return Multiply(p2[0], p1);
             int resultDegree = p1.Degree + p2.Degree;
             double[] resultCoeff = new double[resultDegree + 1];
             for(int i = p1.Degree; i >= 0; i--) 
@@ -129,18 +131,40 @@ namespace Task1
 
         public static Polynomial Devide(Polynomial p, double number) {
             return Multiply(1/number,p);
-
         }
 
         public override string ToString() {
             var result = new StringBuilder();
-            for (int i = Degree; i > 0; i--) {
-                if(this[i] == 0) continue;
-                string sign = this[i] < 0 ? "" : "+";
+            for (int i = Degree; i >= 0; i--) {
+                if(Math.Abs(this[i]) < Eps) continue;
+                string sign;
+                if (i == 1) {
+                    if(Math.Abs(this[i]) > Eps) {
+                        sign = this[i] < 0 ? "" : "+";
+                        if(Math.Abs((int) (this[1] - 1)) < double.Epsilon) {
+                            result.Append(sign + "x");
+                        } else
+                            result.Append(sign + this[1] + "x");
+                    }
+                    continue;
+                }
+                if (i == 0) {
+                    if(Math.Abs(this[i]) > Eps) {
+                        sign = this[i] < 0 ? "" : "+";
+                        result.Append(sign + this[0]);
+                    }
+                    continue;
+                }
+
+                if (Math.Abs((int) (this[i] - 1)) < Eps || Math.Abs((int) (this[i] - (-1))) < Eps) {
+                    sign = this[i] < 0 ? "" : "+";
+                    result.Append(sign + "x^" + i);
+                    continue;
+                }
+                sign = this[i] < 0 ? "" : "+";
                 result.Append(sign + this[i] + "x^" + i);
              }
-            if(this[0] != 0)
-                result.Append("+" + this[0]);
+           
             return result.ToString();
         }
 
@@ -150,7 +174,7 @@ namespace Task1
             Polynomial p2 = (Polynomial) obj;
             if (Degree != p2.Degree) return false;
             for (int i = 0; i <= Degree; i++) {
-                if (!this[i].Equals(p2[i]))
+                if (Math.Abs(this[i] - p2[i]) > Eps)
                     return false;
             }
             return true;
