@@ -46,10 +46,10 @@ namespace Task1
         public static Polynomial operator * (int number,Polynomial p) {
             return Multiply(number,p);
         }
-        public static Polynomial operator *(Polynomial p, int number) {
+        public static Polynomial operator *(Polynomial p, double number) {
             return Multiply(number,p);
         }
-        public static Polynomial operator /(Polynomial p, int number) {
+        public static Polynomial operator /(Polynomial p, double number) {
             return Devide(p, number);
         }
 
@@ -132,7 +132,7 @@ namespace Task1
             return Multiply(1/number,p);
         }
 
-        private int GetDegree(double[] coeff){
+        private static int GetDegree(double[] coeff){
             int degree = coeff.Length - 1;
             int countZero = 0;
             for (int i = degree; i > 0; i--){
