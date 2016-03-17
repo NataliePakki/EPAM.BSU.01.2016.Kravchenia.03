@@ -50,7 +50,7 @@ namespace Task1
             return Multiply(number,p);
         }
         public static Polynomial operator /(Polynomial p, double number) {
-            return Devide(p, number);
+            return Divide(p, number);
         }
 
         public static bool operator ==(Polynomial p1, Polynomial p2) {
@@ -128,8 +128,9 @@ namespace Task1
             return new Polynomial(resultCoeff);
         }
 
-        public static Polynomial Devide(Polynomial p, double number) {
-            return Multiply(1/number,p);
+        public static Polynomial Divide(Polynomial p, double number) {
+            if(Math.Abs(number) > Eps) return Multiply(1/number,p);
+            throw  new DivideByZeroException();
         }
 
         private static int GetDegree(double[] coeff){
