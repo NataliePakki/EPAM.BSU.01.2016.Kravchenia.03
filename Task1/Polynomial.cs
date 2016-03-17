@@ -55,10 +55,10 @@ namespace Task1
         }
 
         public static bool operator ==(Polynomial p1, Polynomial p2) {
-            return p1.Equals(p2);
+            return Equals(p1,p2);
         }
         public static bool operator !=(Polynomial p1, Polynomial p2) {
-            return !p1.Equals(p2);
+            return Equals(p1,p2);
         }
 
         public double this[int i] {
@@ -182,10 +182,10 @@ namespace Task1
             return Equals(this, (Polynomial) obj);           
         }
 
-        public bool Equals(Polynomial p1, Polynomial p2) {
-            if (Degree != p2.Degree) return false;
-            for (int i = 0; i <= Degree; i++){
-                if (Math.Abs(this[i] - p2[i]) > Eps)
+        public static bool Equals(Polynomial p1, Polynomial p2) {
+            if (p1.Degree != p2.Degree) return false;
+            for (int i = 0; i <= p1.Degree; i++){
+                if (Math.Abs(p1[i] - p2[i]) > Eps)
                     return false;
             }
             return true;
