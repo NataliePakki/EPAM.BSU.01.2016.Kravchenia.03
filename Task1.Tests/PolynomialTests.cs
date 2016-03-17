@@ -78,9 +78,9 @@ namespace Task1.Tests
         }
         [Test]
         [TestCase(new double[] { 12, 3, 27 }, 3, new double[] { 4, 1, 9})]
-        public void DivideTest(double[] coeff1,double number, double[] coeffSum) {
+        public void DivideTest(double[] coeff1,double number, double[] coeffRes) {
             Polynomial pol1 = new Polynomial(coeff1);
-            Polynomial result = new Polynomial(coeffSum);
+            Polynomial result = new Polynomial(coeffRes);
 
             Polynomial pol3 = pol1 / number;
 
@@ -90,16 +90,20 @@ namespace Task1.Tests
         [Test]
         [ExpectedException(typeof(DivideByZeroException))]
         [TestCase(new double[] { 12, 3, 27 }, 0, new double[] { 4, 1, 9 })]
-        public void DivideTest_Exception(double[] coeff1, double number, double[] coeffSum)
-        {
+        public void DivideTest_Exception(double[] coeff1, double number, double[] coeffRes)        {
             Polynomial pol1 = new Polynomial(coeff1);
-            Polynomial result = new Polynomial(coeffSum);
+            Polynomial result = new Polynomial(coeffRes);
 
             Polynomial pol3 = pol1 / number;
 
             Assert.AreEqual(pol3, result);
         }
+        [Test]
+        [TestCase(new double[] { 12, 3, 27 }, 2, Result = 126)]
+        public double CalculatePolunomialTest(double[] coeff1, double x){
+            Polynomial pol1 = new Polynomial(coeff1);
+            return pol1.CalculatePolynomial(x);
 
-
+        }
     }
 }

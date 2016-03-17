@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Task1
@@ -133,6 +134,14 @@ namespace Task1
             throw  new DivideByZeroException();
         }
 
+        public double CalculatePolynomial(double x) {
+            double result = 0;
+            for (int i = 0; i <= Degree; i++) {
+                result += this[i] * Math.Pow(x, i);
+            }
+            return result;
+        }
+
         private static int GetDegree(double[] coeff){
             int degree = coeff.Length - 1;
             int countZero = 0;
@@ -170,9 +179,12 @@ namespace Task1
         public override bool Equals(object obj) {
             if (obj == null) return false;
             if (GetType() != obj.GetType()) return false;
-            Polynomial p2 = (Polynomial) obj;
+            return Equals(this, (Polynomial) obj);           
+        }
+
+        public bool Equals(Polynomial p1, Polynomial p2) {
             if (Degree != p2.Degree) return false;
-            for (int i = 0; i <= Degree; i++) {
+            for (int i = 0; i <= Degree; i++){
                 if (Math.Abs(this[i] - p2[i]) > Eps)
                     return false;
             }
